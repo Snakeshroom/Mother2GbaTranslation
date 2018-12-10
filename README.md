@@ -46,3 +46,40 @@ That said, if you do want to try compiling this thing:
         3. Download and install [GNU Arm Embedded Toolchain](https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads) (anything newer than 6-2017-q1-update should work). Make sure it ends up in your PATH environment variable (the installer should take care of this).
 2. Building the ROM
     1. Run `insert.bat`. This will generate `m12.gba` in the repository root, which has everything compiled and inserted.
+
+### Compiling on Ubuntu
+
+Only tested on 18.10, but I imagine this will work for earlier versions too.
+
+1. Install Mono
+    1. Follow the instructions here to install Mono: https://www.mono-project.com/download/stable/#download-lin
+        1. It's important that you use the above link and instructions, and _not_ just `apt install` the mono package!
+2. Install dependency packages
+    1. `sudo apt install git cmake nuget`
+3. Install the ARM cross-compiler toolchain
+    1. Visit https://developer.arm.com/open-source/gnu-toolchain/gnu-rm/downloads and download the latest Linux archive
+    2. The webpage says there's a readme with install instructions, but I found them unhelpful. To install:
+        1. Extract the archive to `/opt`
+        2. Add `/opt/gcc-arm-none-eabi-X-XXXX-XX-update/bin` to your PATH variable, replacing the `X`'s with whatever your version is
+            1. I did this by adding the following line to `~/.profile`:
+               `PATH="/opt/gcc-arm-none-eabi-X-XXXX-XX-update/bin:$PATH"`
+        3. Log out and log back in to refresh the PATH variable
+4. Clone this repository if you haven't done so already
+5. Clone and build armips
+    1. Clone the armips repo: https://github.com/Kingcom/armips
+    2. Follow the Unix build instructions in the readme, under section 2.2:
+       ```
+       $ mkdir build && cd build
+       $ cmake -DCMAKE_BUILD_TYPE=Release ..
+       $ make
+       ```
+    3. Copy the `armips` binary from the build folder to the root of the Mother 1+2 repository
+6. Build the tools
+    1. Go to the `ScriptTool/` directory and run:
+       ```
+       nuget restore
+       msbuild
+       ```
+    2. Repeat the above step with `SymbolTableBuilder/` and `compiled/Amalgamator/`
+7. Copy `m12fresh.gba` to the root of the repository
+8. Run `insert.sh`

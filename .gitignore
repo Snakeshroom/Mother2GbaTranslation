@@ -14,7 +14,7 @@ armtest/
 saves/
 working/*.asm
 working/*.bin
-armips.exe
+armips*
 *.sym
 m2-compiled.asm
 
