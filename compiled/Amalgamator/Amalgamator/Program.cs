@@ -17,10 +17,9 @@ namespace Amalgamator
         const string GccExec = "arm-none-eabi-gcc";
         const string LdExec = "arm-none-eabi-ld";
         const string CompiledAsmFile = "m2-compiled.asm";
-        const string ArmipsExec = "armips.exe";
         const string HackFile = "m2-hack.asm";
         const string ArmipsSymFile = "armips-symbols.sym";
-        const string IncludesSymFile = "working\\includes-symbols.sym";
+        static readonly string IncludesSymFile = Path.Combine("working", "includes-symbols.sym");
         const string LinkerScript = "linker.ld";
         const string LinkedObjectFile = "linked.o";
 
@@ -100,6 +99,22 @@ namespace Amalgamator
             IncludeBinfile(options.GetRootFile(options.RomName), code, options.CompiledAddress);
 
             return 0;
+        }
+
+        static string GetArmipsExec()
+        {
+            if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
+            {
+                return "armips.exe";
+            }
+            else if (Environment.OSVersion.Platform == PlatformID.Unix)
+            {
+                return "armips";
+            }
+            else
+            {
+                throw new NotSupportedException("Platform not supported");
+            }
         }
 
         static Options GetOptions(string[] args)
@@ -265,7 +280,7 @@ namespace Amalgamator
 
         static bool RunAssembler(string rootDirectory)
         {
-            return RunProcess(ArmipsExec, rootDirectory, HackFile, "-sym", ArmipsSymFile) == 0;
+            return RunProcess(GetArmipsExec(), rootDirectory, HackFile, "-sym", ArmipsSymFile) == 0;
         }
 
         static bool RunLinker(string rootDirectory, IEnumerable<string> objectFiles)
