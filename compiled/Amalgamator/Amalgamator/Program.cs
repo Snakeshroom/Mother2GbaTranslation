@@ -103,7 +103,8 @@ namespace Amalgamator
 
         static string GetArmipsExec()
         {
-            if (Environment.OSVersion.Platform == PlatformID.Win32Windows)
+            if (Environment.OSVersion.Platform == PlatformID.Win32Windows ||
+                Environment.OSVersion.Platform == PlatformID.Win32NT)
             {
                 return "armips.exe";
             }
